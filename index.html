@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Captura de Datos - Solicitud de Crédito</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f4f6;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .form-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+            font-size: 0.9em;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 1em;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #0066cc;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background-color: #0066cc;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            background-color: #0052a3;
+        }
+
+        /* Estilos para la lista desplegable */
+        .toggle-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #0066cc;
+            cursor: pointer;
+            font-size: 0.9em;
+            text-decoration: underline;
+        }
+
+        .lista-container {
+            display: none;
+            /* Oculto por defecto */
+            margin-top: 15px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .lista-container.activa {
+            display: block;
+            /* Se muestra cuando tiene la clase activa */
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.9em;
+            color: #333;
+        }
+
+        ul li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="form-container">
+        <h2>Formulario de Solicitud de Crédito</h2>
+
+        <form id="formularioCredito">
+            <div class="form-group">
+                <label for="nombre">Nombre Completo:</label>
+                <input type="text" id="nombre" name="nombre" required placeholder="Ej. Juan Pérez">
+            </div>
+
+            <div class="form-group">
+                <label for="cedula">Cédula de Identidad:</label>
+                <input type="text" id="cedula" name="cedula" required pattern="\d{7,8}"
+                    title="Debe contener entre 7 y 8 números" placeholder="Ej. 12345678">
+            </div>
+
+            <div class="form-group">
+                <label for="correo">Correo Electrónico:</label>
+                <input type="email" id="correo" name="correo" required placeholder="correo@ejemplo.com">
+            </div>
+
+            <div class="form-group">
+                <label for="tipo_credito">Tipo de Crédito:</label>
+                <select id="tipo_credito" name="tipo_credito" required>
+                    <option value="" disabled selected>Seleccione una opción</option>
+                    <option value="Personal">Crédito Personal</option>
+                    <option value="Vehículo">Crédito para Vehículo</option>
+                    <option value="Hipotecario">Crédito Hipotecario</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="monto">Monto Solicitado ($):</label>
+                <input type="number" id="monto" name="monto" required min="500" max="50000" placeholder="Mínimo $500">
+            </div>
+
+            <button type="submit" class="btn-submit">Procesar Solicitud</button>
+        </form>
+
+        <!-- Sección de la lista desplegable -->
+        <span id="toggleLista" class="toggle-link">Mostrar solicitudes registradas ▼</span>
+
+        <div id="contenedorLista" class="lista-container">
+            <ul id="listaSolicitudes">
+                <!-- Datos de prueba estáticos para que no se vea vacío al inicio -->
+                <li><strong>Maria Rodriguez</strong> - Vehículo ($4500)</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Lógica para procesar el formulario y agregar datos a la lista
+        document.getElementById('formularioCredito').addEventListener('submit', function (evento) {
+            evento.preventDefault();
+
+            // Capturamos los valores que el usuario escribió
+            let nombre = document.getElementById('nombre').value;
+            let tipo = document.getElementById('tipo_credito').value;
+            let monto = document.getElementById('monto').value;
+
+            // Creamos un nuevo elemento de lista (li)
+            let nuevoItem = document.createElement('li');
+            nuevoItem.innerHTML = `<strong>${nombre}</strong> - ${tipo} ($${monto})`;
+
+            // Lo agregamos a la lista desplegable
+            document.getElementById('listaSolicitudes').appendChild(nuevoItem);
+
+            alert("¡Solicitud procesada con éxito! Los datos han sido registrados en el sistema.");
+
+            // Limpiamos el formulario
+            this.reset();
+        });
+
+        // Lógica para desplegar y ocultar la lista
+        document.getElementById('toggleLista').addEventListener('click', function () {
+            let contenedor = document.getElementById('contenedorLista');
+
+            // Alternamos la clase 'activa' para mostrar u ocultar
+            contenedor.classList.toggle('activa');
+
+            // Cambiamos el texto del botón según el estado
+            if (contenedor.classList.contains('activa')) {
+                this.textContent = "Ocultar solicitudes registradas ▲";
+            } else {
+                this.textContent = "Mostrar solicitudes registradas ▼";
+            }
+        });
+    </script>
+</body>
+
+</html>
